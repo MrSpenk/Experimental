@@ -96,13 +96,6 @@ function Kunkka.FullCombo(myHero, enemy)
 							Kunkka.lastTick = os.clock() + 0.1
 							return
 						end
-					elseif XMark and Ability.IsCastable(XMark, myMana) and NPC.IsEntityInRange(myHero, enemy, Ability.GetCastRange(XMark)) then
-						Ability.CastTarget(XMark, enemy)
-						Kunkka.XMarkPos = Entity.GetAbsOrigin(enemy)
-						Kunkka.XMarkCastTime = os.clock() + 1
-						Kunkka.lastTick = os.clock() + 0.1
-						Kunkka.ComboTimer = os.clock() + 3.08
-						return
 					end
 				end
 			else
@@ -196,7 +189,7 @@ end
 function Kunkka.targetChecker(genericEnemyEntity)
 
 	local myHero = Heroes.GetLocal()
-		if not myHero or not genericEnemyEntity then return end
+		if not myHero then return end
 
 	if genericEnemyEntity and not NPC.IsDormant(genericEnemyEntity) and not NPC.IsIllusion(genericEnemyEntity) and Entity.GetHealth(genericEnemyEntity) > 0 then
 
@@ -257,7 +250,7 @@ function Kunkka.getComboTarget(myHero)
 	local mousePos = Input.GetWorldCursorPos()
 
 	local enemyTable = Heroes.InRadius(mousePos, targetingRange, Entity.GetTeamNum(myHero), Enum.TeamType.TEAM_ENEMY)
-		if #enemyTable < 1 then return end
+	if not enemyTable or #enemyTable < 1 then return end
 
 	local nearestTarget = nil
 	local distance = 99999
