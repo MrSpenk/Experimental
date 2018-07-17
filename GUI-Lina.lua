@@ -132,9 +132,8 @@ function Lina.Combo()
 	Lina.LockTarget(enemy)
 	if not Lina.Target then return end
 	
-	local pos = Entity.GetAbsOrigin( Lina.Target )
-	
 	if Lina.CastTime <= os.clock() then
+		local pos = Entity.GetAbsOrigin( Lina.Target )
 		local ordercast = GUI.Get(Lina.Identity .. "ordercast", 1)
 		if ordercast ~= nil then
 			for i = 1, Length(ordercast) do
@@ -145,7 +144,8 @@ function Lina.Combo()
 		local casted_slave, casted_stun = false
 		
 		if GUI.IsEnabled(Lina.Identity .."SlaveIC") then
-			local slavePred = Ability.GetCastPoint(slave) + (pos:__sub(Entity.GetAbsOrigin(self)):Length2D() / 1200) + (NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING) * 2)
+			
+			local slavePred = Ability.GetCastPoint(slave) + (Entity.GetAbsOrigin( Lina.Target ):__sub(Entity.GetAbsOrigin(self)):Length2D() / 1200) + (NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING) * 2)
 			Lina.Cast("lina_dragon_slave", self, Lina.Target, Lina.castPred(self, Lina.Target, slavePred), mana)
 			casted_slave = true
 		else
@@ -154,7 +154,7 @@ function Lina.Combo()
 
 		if casted_slave and GUI.IsEnabled(Lina.Identity .."StunIC") then
 			local dist = Ability.GetCastRange( stun )
-			local stunPred = Ability.GetCastPoint(stun) + (pos:__sub(Entity.GetAbsOrigin(self)):Length2D() / dist) + (NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING) * 2)
+			local stunPred = Ability.GetCastPoint(stun) + (Entity.GetAbsOrigin( Lina.Target ):__sub(Entity.GetAbsOrigin(self)):Length2D() / dist) + (NetChannel.GetAvgLatency(Enum.Flow.FLOW_OUTGOING) * 2)
 
 			Lina.Cast("lina_light_strike_array", self, Lina.Target, Lina.castPred(self, Lina.Target, stunPred), mana)
 			casted_stun = true
